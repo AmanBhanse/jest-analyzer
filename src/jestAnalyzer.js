@@ -160,19 +160,24 @@ export const getJestFileAnalysis = (testFilePath) => {
   };
 };
 
-export const getTestDirAnalysis = (test_dir) => {
-  //Check test_dir validity
+const isDir = (dirPath) => {
+  // returns : 1 = it is directory, 0 if it is not, -1 when path not exist
   try {
-    // Synchronously get the stats of the file
     const stats = fs.statSync(test_dir);
-    // Check if it's a directory
     if (stats.isDirectory() != true) {
-      console.error(`'${test_dir}' is not a directory.`);
-      process.exit(1);
+      return 0;
+    } else {
+      return 1;
     }
   } catch (err) {
-    console.error(`ERROR : Invalid test dir ${test_dir}`);
-    process.exit(1);
+    return -1;
+  }
+};
+
+export const getTestDirAnalysis = (test_dir) => {
+  //Check test_dir validity
+  if (isDir(test_dir) != 1) {
+    console.error(`ERRROR : Invalid path ${test_dir}`);
   }
 
   let allTestFilesAnalysis = [];
