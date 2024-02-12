@@ -4,6 +4,7 @@ import { simple } from 'acorn-walk';
 import * as acorn from 'acorn';
 import * as glob from 'glob';
 import path from 'path';
+import { isDir } from './commonUtils.js';
 
 export const parserJavascriptFile = (filePath) => {
   const code = fs.readFileSync(filePath, 'utf-8');
@@ -158,20 +159,6 @@ export const getJestFileAnalysis = (testFilePath) => {
     numberOfTestcases: analysisResult.length,
     analysisResult,
   };
-};
-
-const isDir = (dirPath) => {
-  // returns : 1 = it is directory, 0 if it is not, -1 when path not exist
-  try {
-    const stats = fs.statSync(test_dir);
-    if (stats.isDirectory() != true) {
-      return 0;
-    } else {
-      return 1;
-    }
-  } catch (err) {
-    return -1;
-  }
 };
 
 export const getTestDirAnalysis = (test_dir) => {
