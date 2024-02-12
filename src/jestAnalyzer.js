@@ -140,18 +140,6 @@ const getTestFileMeta = (ast) => {
   return allTestCaseAnlysis;
 };
 
-const write_ast_to_out_dir = (ast) => {
-  const out_file = 'D:/programming/Scripts/out/ast.json';
-  const jsonString = JSON.stringify(ast, null, 2);
-  fs.writeFile(out_file, jsonString, 'utf8', (err) => {
-    if (err) {
-      console.error('Error writing file:', err);
-    } else {
-      console.debug('JSON data has been written to', out_file);
-    }
-  });
-};
-
 export const getJestFileAnalysis = (testFilePath) => {
   const ast = parserJavascriptFile(testFilePath);
   const analysisResult = getTestFileMeta(ast);
@@ -162,14 +150,14 @@ export const getJestFileAnalysis = (testFilePath) => {
   };
 };
 
-export const getTestDirAnalysis = (test_dir) => {
+export const getTestDirAnalysis = (testDir, reportConfig) => {
   //Check test_dir validity
-  if (isDir(test_dir) != 1) {
-    console.error(`ERRROR : Invalid path ${test_dir}`);
+  if (isDir(testDir) != 1) {
+    console.error(`ERRROR : Invalid path ${testDir}`);
   }
 
   let allTestFilesAnalysis = [];
-  let glob_test_file_pattern = path.join(test_dir, '*test.js');
+  let glob_test_file_pattern = path.join(testDir, '*test.js');
   let forwardSlashPath = glob_test_file_pattern.replace(/\\/g, '/'); //Glob is compatible with forward slash paths only
   const test_files = glob.glob.sync(forwardSlashPath);
 
@@ -179,8 +167,7 @@ export const getTestDirAnalysis = (test_dir) => {
     allTestFilesAnalysis.push(singleTestFileAnalysis);
   }
 
-  const reportConfg = {
-    reportType: 'print',
-  };
-  generateReport(allTestFilesAnalysis, reportConfg);
+  if (reportConfig.reportType) {
+    generateReport(allTestFilesAnalysis, reportConfig);
+  }
 };

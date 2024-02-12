@@ -10,7 +10,15 @@
       "name": "Launch Program",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}\\index.js",
-      "args": ["--test_dir=D:/temp/demo"]
+      "args": ["--test_dir=D:/temp/test"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run Jest utility with json output",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}\\index.js",
+      "args": ["--test_dir=D:/temp/demo", "--report_out=D:/temp"]
     }
   ]
 }

@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+
 const generatePrintReport = (analysisObj, config) => {
   for (let testFileAnalysis of analysisObj) {
     const testFilePath = testFileAnalysis.testFilePath;
@@ -29,8 +32,26 @@ const generatePrintReport = (analysisObj, config) => {
   }
 };
 
+const generateJsonReport = (analysisObj, config) => {
+  const jsonString = JSON.stringify(analysisObj, null, 2);
+  const outDir = config.outDir;
+  const outFile = path.join(outDir, 'jest_analysis.json');
+
+  fs.writeFile(outFile, jsonString, 'utf8', (err) => {
+    if (err) {
+      console.error('Error writing file:', err);
+    } else {
+      console.debug('JSON data has been written to', outFile);
+    }
+  });
+};
+
 export const generateReport = (analysisObj, config) => {
   if (config.reportType == 'print') {
     generatePrintReport(analysisObj, config);
+  }
+
+  if (config.reportType == 'json') {
+    generateJsonReport(analysisObj, config);
   }
 };
