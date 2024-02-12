@@ -50,6 +50,7 @@ const _getAnalysisOfItTestFn = (fnNode) => {
   const testCallbackfnNode = fnNode.expression.arguments[1];
   console.log(`${"  ".repeat(3)} - Analyzing := ${testDescription}`);
   let analysis = {
+    testDescription,
     isExpectPresent: false,
   };
 
@@ -149,10 +150,14 @@ const write_ast_to_out_dir = (ast) => {
   });
 };
 
-export const getJestFileAnalysis = (test_file_path) => {
-  const ast = parserJavascriptFile(test_file_path);
-  //write_ast_to_out_dir(ast);
-  getTestFileMeta(ast);
+export const getJestFileAnalysis = (testFilePath) => {
+  const ast = parserJavascriptFile(testFilePath);
+  const analysisResult = getTestFileMeta(ast);
+  return {
+    testFilePath,
+    numberOfTestcases: analysisResult.length,
+    analysisResult,
+  };
 };
 
 export const getTestDirAnalysis = (test_dir) => {
@@ -170,11 +175,13 @@ export const getTestDirAnalysis = (test_dir) => {
     process.exit(1);
   }
 
+  let allTestFilesAnalysis = [];
   let glob_test_file_pattern = path.join(test_dir, "*test.js");
   let forwardSlashPath = glob_test_file_pattern.replace(/\\/g, "/"); //Glob is compatible with forward slash paths only
   const test_files = glob.glob.sync(forwardSlashPath);
 
   for (let test_file_path of test_files) {
-    getJestFileAnalysis(test_file_path);
+    let singleTestFileAnalysis = getJestFileAnalysis(test_file_path);
+    allTestFilesAnalysis.push(singleTestFileAnalysis);
   }
 };
