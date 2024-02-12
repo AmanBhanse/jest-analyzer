@@ -40,7 +40,7 @@ const _extractTestCaseFromDescribeFnCallbckBody = (describeFnCallbackBody) => {
   return testCaseNodeList;
 };
 
-const _getAnalysisOfItTestFn = (fnNode) => {
+const _getAssertionAnalysisOfItTestFn = (fnNode) => {
   if (
     fnNode.expression.callee.name != 'it' &&
     fnNode.expression.callee.name != 'test'
@@ -77,13 +77,13 @@ const _getAnalysisOfItTestFn = (fnNode) => {
 const getAnalysisOnTestCaseNodes = (testCaseNodeList) => {
   const analysis = [];
   for (let node of testCaseNodeList) {
-    const result = _getAnalysisOfItTestFn(node);
+    const result = _getAssertionAnalysisOfItTestFn(node);
     analysis.push(result);
   }
   return analysis;
 };
 
-const getTestFileMeta = (ast) => {
+const getTestFileAssertionAnalysis = (ast) => {
   const allTestCaseAnlysis = [];
 
   if (ast.hasOwnProperty('body')) {
@@ -130,7 +130,8 @@ const getTestFileMeta = (ast) => {
           node.expression.callee.name == 'test'
         ) {
           console.debug('- it/test block found');
-          const singleTestCaseAnalysisResult = _getAnalysisOfItTestFn(node);
+          const singleTestCaseAnalysisResult =
+            _getAssertionAnalysisOfItTestFn(node);
           allTestCaseAnlysis.push(singleTestCaseAnalysisResult);
         }
       }
@@ -142,11 +143,10 @@ const getTestFileMeta = (ast) => {
 
 export const getJestFileAnalysis = (testFilePath) => {
   const ast = parserJavascriptFile(testFilePath);
-  const analysisResult = getTestFileMeta(ast);
+  const assertionAnalysisResult = getTestFileAssertionAnalysis(ast);
   return {
     testFilePath,
-    numberOfTestcases: analysisResult.length,
-    analysisResult,
+    assertionAnalysisResult,
   };
 };
 

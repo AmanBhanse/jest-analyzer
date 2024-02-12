@@ -18,7 +18,23 @@
       "name": "Run Jest utility with json output",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}\\index.js",
-      "args": ["--test_dir=D:/temp/demo", "--report_out=D:/temp"]
+      "args": [
+        "--test_dir=D:/temp/demo",
+        "--report_type=json",
+        "--report_out=D:/temp"
+      ]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run Jest utility with html output",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}\\index.js",
+      "args": [
+        "--test_dir=D:/temp/test",
+        "--report_type=html",
+        "--report_out=D:/temp"
+      ]
     }
   ]
 }
