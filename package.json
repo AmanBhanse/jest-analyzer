@@ -1,0 +1,18 @@
+{
+  "name": "amby-jest-parser",
+  "version": "1.0.0",
+  "description": "Jest Test parser",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Aman Bhanse",
+  "license": "ISC",
+  "dependencies": {
+    "acorn": "^8.11.3",
+    "acorn-walk": "^8.3.2",
+    "glob": "^10.3.10",
+    "yargs": "^17.7.2"
+  }
+}
