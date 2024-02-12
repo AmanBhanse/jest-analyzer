@@ -5,6 +5,7 @@ import * as acorn from 'acorn';
 import * as glob from 'glob';
 import path from 'path';
 import { isDir } from './commonUtils.js';
+import { generateReport } from './reportGenerator.js';
 
 export const parserJavascriptFile = (filePath) => {
   const code = fs.readFileSync(filePath, 'utf-8');
@@ -49,7 +50,7 @@ const _getAnalysisOfItTestFn = (fnNode) => {
 
   const testDescription = fnNode.expression.arguments[0].value;
   const testCallbackfnNode = fnNode.expression.arguments[1];
-  console.log(`${'  '.repeat(3)} - Analyzing := ${testDescription}`);
+  console.debug(`${'  '.repeat(3)} - Analyzing := ${testDescription}`);
   let analysis = {
     testDescription,
     isExpectPresent: false,
@@ -65,9 +66,9 @@ const _getAnalysisOfItTestFn = (fnNode) => {
   });
 
   if (analysis.isExpectPresent == true) {
-    console.log(`${'  '.repeat(6)} - Assertion : Found`);
+    console.debug(`${'  '.repeat(6)} - Assertion : Found`);
   } else {
-    console.log(`${'  '.repeat(6)} - Assertion : Not Found!`);
+    console.debug(`${'  '.repeat(6)} - Assertion : Not Found!`);
   }
 
   return analysis;
@@ -76,8 +77,6 @@ const _getAnalysisOfItTestFn = (fnNode) => {
 const getAnalysisOnTestCaseNodes = (testCaseNodeList) => {
   const analysis = [];
   for (let node of testCaseNodeList) {
-    // const calleeName = node.expression.callee.name;
-    // console.log(`${"  ".repeat(3)} - Unit test = ${calleeName}`);
     const result = _getAnalysisOfItTestFn(node);
     analysis.push(result);
   }
@@ -98,7 +97,7 @@ const getTestFileMeta = (ast) => {
       ) {
         //Now check if the called function is "describe" or not
         if (node.expression.callee.name == 'describe') {
-          console.log('- Describe block found');
+          console.debug('- Describe block found');
           let suite_description = null;
           let describeFnCallbackBody = null;
 
@@ -106,7 +105,9 @@ const getTestFileMeta = (ast) => {
           if (node.expression.arguments[0].type == 'Literal') {
             suite_description = node.expression.arguments[0].value;
           }
-          console.log(`${'  '.repeat(3)} - Description : ${suite_description}`);
+          console.debug(
+            `${'  '.repeat(3)} - Description : ${suite_description}`
+          );
 
           //Logic to get callback called at describe function
           if (node.expression.arguments[1].type == 'FunctionExpression') {
@@ -128,7 +129,7 @@ const getTestFileMeta = (ast) => {
           node.expression.callee.name == 'it' ||
           node.expression.callee.name == 'test'
         ) {
-          console.log('- it/test block found');
+          console.debug('- it/test block found');
           const singleTestCaseAnalysisResult = _getAnalysisOfItTestFn(node);
           allTestCaseAnlysis.push(singleTestCaseAnalysisResult);
         }
@@ -146,7 +147,7 @@ const write_ast_to_out_dir = (ast) => {
     if (err) {
       console.error('Error writing file:', err);
     } else {
-      console.log('JSON data has been written to', out_file);
+      console.debug('JSON data has been written to', out_file);
     }
   });
 };
@@ -173,8 +174,13 @@ export const getTestDirAnalysis = (test_dir) => {
   const test_files = glob.glob.sync(forwardSlashPath);
 
   for (let test_file_path of test_files) {
-    console.log(`- Analyzing test file : ${test_file_path}`);
+    console.debug(`- Analyzing test file : ${test_file_path}`);
     let singleTestFileAnalysis = getJestFileAnalysis(test_file_path);
     allTestFilesAnalysis.push(singleTestFileAnalysis);
   }
+
+  const reportConfg = {
+    reportType: 'print',
+  };
+  generateReport(allTestFilesAnalysis, reportConfg);
 };
