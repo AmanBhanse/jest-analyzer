@@ -3,3 +3,9 @@ node_modules/
 
 # Ignore launch.json file
 .vscode/launch.json
+
+# bin is output of transcompiled code
+bin/
+
+#build
+build/

@@ -2,10 +2,12 @@
   "name": "amby-jest-parser",
   "version": "1.0.0",
   "description": "Jest Test parser",
-  "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "convertToES5": "babel src -d bin",
+    "start": "node src/index.js",
+    "build": "npm run convertToES5 && pkg ./bin/index.js  -o build/jestAnalyzer.exe"
   },
   "author": "Aman Bhanse",
   "license": "ISC",
@@ -15,5 +17,10 @@
     "chart.js": "^4.4.1",
     "glob": "^10.3.10",
     "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.23.9",
+    "@babel/core": "^7.23.9",
+    "@babel/preset-env": "^7.23.9"
   }
 }

@@ -9,5 +9,5 @@ This utility give analysis of your Jest test files
 ### How to run the utility
 
 - `npm i`
-- `node index.js --test_dir=\<JEST-TEST-DIR\>`
+- `npm run start -- --test_dir=\<JEST-TEST-DIR\>`
 - It will output you the analysis
