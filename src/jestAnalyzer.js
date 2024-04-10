@@ -153,8 +153,8 @@ export const getJestFileAnalysis = (testFilePath) => {
 export const getTestDirAnalysis = (testDir, reportConfig) => {
   //Check test_dir validity
   if (isDir(testDir) != 1) {
-    console.error(`ERRROR : Invalid path ${testDir}`);
-    return 1;
+    console.log(`ERRROR : Invalid path ${testDir}`);
+    process.exit(1);
   }
 
   let allTestFilesAnalysis = [];
@@ -163,8 +163,8 @@ export const getTestDirAnalysis = (testDir, reportConfig) => {
   const test_files = glob.glob.sync(forwardSlashPath);
 
   if (test_files.length == 0) {
-    console.error('No test files found in the directory');
-    return 1;
+    console.log('No test files found in the directory');
+    process.exit(1);
   }
   
   for (let test_file_path of test_files) {
