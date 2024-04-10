@@ -154,6 +154,7 @@ export const getTestDirAnalysis = (testDir, reportConfig) => {
   //Check test_dir validity
   if (isDir(testDir) != 1) {
     console.error(`ERRROR : Invalid path ${testDir}`);
+    return 1;
   }
 
   let allTestFilesAnalysis = [];
@@ -161,6 +162,11 @@ export const getTestDirAnalysis = (testDir, reportConfig) => {
   let forwardSlashPath = glob_test_file_pattern.replace(/\\/g, '/'); //Glob is compatible with forward slash paths only
   const test_files = glob.glob.sync(forwardSlashPath);
 
+  if (test_files.length == 0) {
+    console.error('No test files found in the directory');
+    return 1;
+  }
+  
   for (let test_file_path of test_files) {
     console.debug(`- Analyzing test file : ${test_file_path}`);
     let singleTestFileAnalysis = getJestFileAnalysis(test_file_path);
