@@ -57,7 +57,7 @@ const generateHtmlReport = (analysisObj, config) => {
     let testcasesWithoutAssertion = 0;
 
     for (let testcaseAnalysis of fileAnalysis.assertionAnalysisResult) {
-      if (testcaseAnalysis.isExpectPresent) {
+      if (!testcaseAnalysis.isExpectPresent) {
         testcasesWithoutAssertion += 1;
       }
 
