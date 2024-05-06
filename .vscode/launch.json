@@ -29,10 +29,23 @@
       "request": "launch",
       "name": "Run Jest utility with html output",
       "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}\\index.js",
+      "program": "${workspaceFolder}/src/index.js",
       "args": [
-        "--test_dir=D:/temp/test",
+        "--test_dir=D:/WorkDir/devUnit/tcc2412_0429/src/thinclient/attrtargetmgmtjs/test",
         "--report_type=html",
+        "--report_out=D:/temp"
+      ]
+    }
+    ,
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run Jest utility with excel output",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/src/index.js",
+      "args": [
+        "--test_dir=D:/WorkDir/devUnit/tcc2412_0429/src/thinclient/attrtargetmgmtjs/test",
+        "--report_type=excel",
         "--report_out=D:/temp"
       ]
     }
