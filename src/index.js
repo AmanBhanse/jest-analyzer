@@ -12,7 +12,7 @@ const main = () => {
     },
     report_type: {
       describe: "type of report",
-      choices: ["html", "json"],
+      choices: ["html", "json", "excel"],
       type: "string",
     },
     report_out: {

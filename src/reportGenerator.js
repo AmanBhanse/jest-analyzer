@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import ExcelJS from 'exceljs';
 
 const generatePrintReport = (analysisObj, config) => {
   for (let testFileAnalysis of analysisObj) {
@@ -160,6 +161,37 @@ const generateHtmlReport = (analysisObj, config) => {
   });
 };
 
+const generateExcelReport = async (analysisObj, config) => {
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet('Analysis');
+
+  // Define columns
+  worksheet.columns = [
+    { header: 'File Name', key: 'fileName' },
+    { header: 'Testcase', key: 'testcase' },
+    { header: 'Has Assertions?', key: 'hasAssertions' },
+  ];
+
+  // Add rows
+  for (let fileAnalysis of analysisObj) {
+    for (let testcaseAnalysis of fileAnalysis.assertionAnalysisResult) {
+      worksheet.addRow({
+        fileName: path.basename(fileAnalysis.testFilePath),
+        testcase: testcaseAnalysis.testDescription,
+        hasAssertions: testcaseAnalysis.isExpectPresent,
+      });
+    }
+  }
+
+  const outDir = config.outDir;
+  const outFile = path.join(outDir, 'jest_analysis.xlsx');
+
+  // Write to file
+  await workbook.xlsx.writeFile(outFile);
+  console.debug('Excel data has been written to', outFile);
+};
+
+
 export const generateReport = (analysisObj, config) => {
   if (config.reportType == 'print') {
     generatePrintReport(analysisObj, config);
@@ -171,5 +203,9 @@ export const generateReport = (analysisObj, config) => {
 
   if (config.reportType == 'html') {
     generateHtmlReport(analysisObj, config);
+  }
+
+  if (config.reportType == 'excel') {
+    generateExcelReport(analysisObj, config);
   }
 };
